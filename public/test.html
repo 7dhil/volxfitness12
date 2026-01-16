@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Connection</title>
+</head>
+<body>
+    <h1>Test Frontend-Backend Connection</h1>
+    <button id="testBtn">Test API Connection</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/users');
+                const users = await response.json();
+                document.getElementById('result').innerHTML = `<pre>${JSON.stringify(users, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

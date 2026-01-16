@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VOLX Fitness Blog</title>
+
+  <link rel="stylesheet" href="blog.css">
+  <link rel="stylesheet" href="/public/landing/style.css">
+  <script src="/script.js" defer></script>
+  <script src="/landing/script.js" defer></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="brand" onclick="window.location.href='/landing/index.html'">VOLX</div>
+
+    <nav class="nav-links">
+      <a href="/landing/index.html">Home</a>
+      <a href="/landing/pages/dashboard.html">Dashboard</a>
+      <a href="/landing/pages/workout.html">Workouts</a>
+      <a href="/public/landing/pages/blog.css" class="active">Blog</a>
+    </nav>
+
+    <button class="login-btn" onclick="window.location.href='/login.html'">LOGIN</button>
+    <div class="profile-container" style="display: none;">
+      <div class="profile-icon" title="Profile">👤</div>
+      <div class="profile-menu">
+        <a href="#" onclick="event.preventDefault(); logout();">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-text slide-left">
+      <span class="tag">Featured</span>
+      <h1>Transform Your Body With Smart Fitness</h1>
+      <p>
+        Discover science-backed workouts, nutrition hacks,
+        and recovery techniques designed for real results.
+      </p>
+      <button class="btn">Read Article</button>
+    </div>
+
+    <div class="hero-image slide-right">
+      <img src="/Images/blog img 2.png" alt="Fitness Training">
+    </div>
+  </section>
+
+  <!-- CONTENT SECTION (IMAGE LEFT) -->
+  <section class="content reverse">
+    <div class="content-image">
+      <img src="/Images/yoga blog.png" alt="Yoga">
+    </div>
+
+    <div class="content-text">
+      <h2>Yoga for Strength & Balance</h2>
+      <p>
+        Yoga isn’t just flexibility. It improves balance,
+        core strength, posture, and mental focus when practiced correctly.
+      </p>
+      <button class="btn-outline">Explore More</button>
+    </div>
+  </section>
+
+  <!-- CONTENT SECTION (TEXT LEFT) -->
+  <section class="content">
+    <div class="content-text">
+      <h2>Fast Nutrition That Fuels Performance</h2>
+      <p>
+        Short on time? Learn how to prepare high-protein,
+        energy-boosting meals in under 10 minutes.
+      </p>
+      <button class="btn-outline">View Meals</button>
+    </div>
+
+    <div class="content-image">
+      <img src="/Images/blog meal.png" alt="Healthy Food">
+    </div>
+  </section>
+
+  <footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-col">
+      <h3 class="footer-logo">VOLX</h3>
+      <p>Dubai</p>
+      <p>Downtown</p>
+      <p>Burj Khalifa</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>About us</h4>
+      <ul>
+        <li>Our survey</li>
+        <li>Deger</li>
+        <li>Collertative</li>
+        <li>Sustainability</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li>Our survey</li>
+        <li>Deger</li>
+        <li>Collertative</li>
+        <li>Sustainability</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>📞 +97112345678</p>
+      <p>✉️ volx.hello@ae</p>
+    </div>
+
+  </div>
+
+  <hr>
+</footer>
+<div class="copyright">
+  © 2025 VOLX. All Rights Reserved.
+</div>
+  </body>
+</html>

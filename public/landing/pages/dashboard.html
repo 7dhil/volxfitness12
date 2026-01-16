@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - VOLX</title>
+  <link rel="stylesheet" href="/public/landing/style.css" />
+  <script src="/script.js" defer></script>
+  <script src="/landing/script.js" defer></script>
+  <style>
+    /* Dashboard-specific styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #ff7b65, #ff5a8b);
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Navigation styles */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      margin-bottom: 30px;
+      animation: slideDown 0.6s ease-out;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .brand {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      white-space: nowrap;
+      margin-left: 40px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 5px 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: white;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .login-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      align-self: center;
+    }
+
+    .login-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Dashboard header */
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeInUp 0.8s ease-out;
+      position: relative;
+    }
+
+    .dashboard-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      position: relative;
+      display: inline-block;
+    }
+
+    .dashboard-header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 2px;
+    }
+
+    .dashboard-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-top: 15px;
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      z-index: -1;
+      transition: opacity 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-card:hover::before {
+      opacity: 0;
+    }
+
+    .stat-number {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+      background: linear-gradient(to right, #ffffff, #f0f0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    /* Charts section */
+    .charts-section {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .chart-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: slideUp 0.6s ease-out;
+    }
+
+    .chart-header {
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .chart-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 2px;
+    }
+
+    /* Bar chart styles */
+    .bar-chart {
+      display: flex;
+      align-items: end;
+      height: 200px;
+      gap: 15px;
+      padding: 20px 0;
+      justify-content: space-around;
+    }
+
+    .bar {
+      width: 30px;
+      background: linear-gradient(to top, #ff7b65, #ff5a8b);
+      border-radius: 5px 5px 0 0;
+      position: relative;
+      transition: height 1s ease-in-out;
+    }
+
+    .bar-label {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .bar-value {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    /* Circular progress styles */
+    .circular-progress-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 250px;
+    }
+
+    .circular-progress {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: conic-gradient(#ff5a8b 0% var(--progress), #ffffff20 var(--progress) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .circular-progress::before {
+      content: '';
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .circular-progress-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .progress-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .progress-label {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* Activity section */
+    .activity-section {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: slideUp 0.6s ease-out;
+    }
+
+    .activity-section h2 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .activity-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 2px;
+    }
+
+    .activity-list {
+      list-style: none;
+    }
+
+    .activity-item {
+      padding: 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: fadeIn 0.5s ease-out;
+      animation-fill-mode: both;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+      border-radius: 8px;
+    }
+
+    .activity-content h3 {
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+
+    .activity-content p {
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+
+    .activity-time {
+      opacity: 0.7;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive design */
+    @media (max-width: 992px) {
+      .charts-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        align-items: stretch;
+      }
+      
+      .nav-links {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-left: 0;
+      }
+      
+      .nav-links a {
+        font-size: 14px;
+      }
+      
+      .brand {
+        align-self: flex-start;
+      }
+      
+      .nav > div:last-child {
+        justify-content: center;
+      }
+
+      .dashboard-header h1 {
+        font-size: 2rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-card {
+        animation: none;
+      }
+
+      .stat-card:hover {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav {
+        padding: 10px;
+      }
+      
+      .nav-links {
+        gap: 10px;
+      }
+
+      .dashboard-container {
+        padding: 10px;
+      }
+
+      .dashboard-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .stat-card {
+        padding: 20px;
+      }
+
+      .stat-number {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Navigation -->
+      <div class="nav" role="navigation" aria-label="Main navigation">
+          <div class="brand" onclick="window.location.href='/landing/index.html'">VOLX</div>
+
+          <div style="display: flex; align-items: center; gap: 20px">
+            <nav class="nav-links" aria-hidden="true">
+              <a href="/landing/index.html">Home</a>
+              <a href="/landing/pages/dashboard.html">Dashboard</a>
+              <a href="/landing/pages/workout.html">Workouts</a>
+              <a href="/landing/pages/blog.html">Blog</a>
+            </nav>
+        <button class="login-btn" onclick="window.location.href='/login.html'">LOGIN</button>
+        <div class="profile-container" style="display: none;">
+          <div class="profile-icon" title="Profile">👤</div>
+          <div class="profile-menu">
+            <a href="#" onclick="event.preventDefault(); logout();">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h1>Dashboard</h1>
+      <p>Welcome to your personal fitness dashboard</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-number">12</span>
+        <span class="stat-label">Workouts This Week</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">85%</span>
+        <span class="stat-label">Goal Completion</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">45</span>
+        <span class="stat-label">Days Streak</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">1200</span>
+        <span class="stat-label">Calories Burned</span>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <!-- Bar Chart -->
+      <div class="chart-container">
+        <div class="chart-header">Weekly Workout Progress</div>
+        <div class="bar-chart" id="barChart">
+          <div class="bar" style="--height: 60%; height: 60%;">
+            <div class="bar-value">12</div>
+            <div class="bar-label">Mon</div>
+          </div>
+          <div class="bar" style="--height: 80%; height: 80%;">
+            <div class="bar-value">16</div>
+            <div class="bar-label">Tue</div>
+          </div>
+          <div class="bar" style="--height: 45%; height: 45%;">
+            <div class="bar-value">9</div>
+            <div class="bar-label">Wed</div>
+          </div>
+          <div class="bar" style="--height: 90%; height: 90%;">
+            <div class="bar-value">18</div>
+            <div class="bar-label">Thu</div>
+          </div>
+          <div class="bar" style="--height: 70%; height: 70%;">
+            <div class="bar-value">14</div>
+            <div class="bar-label">Fri</div>
+          </div>
+          <div class="bar" style="--height: 30%; height: 30%;">
+            <div class="bar-value">6</div>
+            <div class="bar-label">Sat</div>
+          </div>
+          <div class="bar" style="--height: 50%; height: 50%;">
+            <div class="bar-value">10</div>
+            <div class="bar-label">Sun</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Circular Progress -->
+      <div class="chart-container">
+        <div class="chart-header">Overall Progress</div>
+        <div class="circular-progress-container">
+          <div class="circular-progress" style="--progress: 85%">
+            <div class="circular-progress-content">
+              <div class="progress-value">85%</div>
+              <div class="progress-label">Completed</div>
+            </div>
+          </div>
+          <div class="progress-label">Weekly Goal</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Section -->
+    <div class="activity-section">
+      <h2>Recent Activity</h2>
+      <ul class="activity-list">
+        <li class="activity-item">
+          <div class="activity-content">
+            <h3>Cardio Session</h3>
+            <p>Completed 30 min running workout</p>
+          </div>
+          <div class="activity-time">2 hours ago</div>
+        </li>
+        <li class="activity-item">
+          <div class="activity-content">
+            <h3>Strength Training</h3>
+            <p>Completed 45 min upper body workout</p>
+          </div>
+          <div class="activity-time">Yesterday</div>
+        </li>
+        <li class="activity-item">
+          <div class="activity-content">
+            <h3>Yoga Session</h3>
+            <p>Completed 45 min flexibility routine</p>
+          </div>
+          <div class="activity-time">2 days ago</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Add smooth animations to elements when they come into view
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add animation to stat cards on load
+      const statCards = document.querySelectorAll('.stat-card');
+      statCards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+          card.style.animation = 'fadeInUp 0.6s ease-out forwards';
+        }, 200 * index);
+      });
+
+      // Animate the bars in the bar chart
+      const bars = document.querySelectorAll('.bar');
+      bars.forEach((bar, index) => {
+        setTimeout(() => {
+          const height = bar.style.getPropertyValue('--height');
+          bar.style.height = '0%';
+          setTimeout(() => {
+            bar.style.height = height;
+          }, 100);
+        }, 300 + (index * 100));
+      });
+
+      // Animate the circular progress
+      const circularProgress = document.querySelector('.circular-progress');
+      const progressValue = circularProgress.style.getPropertyValue('--progress');
+      circularProgress.style.setProperty('--progress', '0%');
+      
+      setTimeout(() => {
+        circularProgress.style.setProperty('--progress', progressValue);
+      }, 500);
+
+      // Add animation to activity items
+      const activityItems = document.querySelectorAll('.activity-item');
+      activityItems.forEach((item, index) => {
+        setTimeout(() => {
+          item.style.opacity = '1';
+          item.style.transform = 'translateY(0)';
+        }, 300 + (100 * index));
+      });
+    });
+  </script>
+</body>
+</html>

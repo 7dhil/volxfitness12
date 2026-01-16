@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Tracker | Fitness Dashboard</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="/script.js" defer></script>
+    <style>
+        /* Navigation styles */
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease-out;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 90, 139, 0.2);
+        }
+        
+        .nav > div:last-child {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .brand {
+            font-family: "Merriweather", serif;
+            font-weight: 700;
+            font-size: 36px;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .brand:hover {
+            transform: translateY(-3px);
+            text-shadow: 0 4px 8px rgba(255, 90, 139, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            white-space: nowrap;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #a0aec0;
+            font-size: 16px;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, #ff7b65, #ff5a8b);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a[style="color: white; font-weight: bold;"] {
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #ff7b65, #ff5a8b);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 90, 139, 0.4);
+        }
+
+        /* Additional responsive styles */
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+                align-items: stretch;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-left: 0;
+            }
+            
+            .brand {
+                align-self: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                padding: 10px;
+            }
+            
+            .nav-links {
+                gap: 10px;
+            }
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000000; /* Matte black background */
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .workout-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff7b65, #ff5a8b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .workout-timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .workout-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 30px;
+            width: 4px;
+            background: linear-gradient(to bottom, #ff7b65, #ff5a8b);
+            border-radius: 2px;
+        }
+
+        .workout-card {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 15px;
+            border-left: 4px solid transparent;
+            border-image: linear-gradient(to bottom, #ff7b65, #ff5a8b);
+            border-image-slice: 1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .workout-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 123, 101, 0.2);
+        }
+
+        .workout-card::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #ff7b65, #ff5a8b);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 90, 139, 0.7);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .card-action-btn {
+            background: #4a5568;
+            border: none;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ffffff;
+        }
+
+        .card-action-btn:hover {
+            background: linear-gradient(135deg, #ff7b65, #ff5a8b);
+            box-shadow: 0 0 15px rgba(255, 90, 139, 0.5);
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 10px 0;
+        }
+
+        .card-detail {
+            margin-bottom: 8px;
+            display: flex;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #a0aec0;
+            min-width: 100px;
+        }
+
+        .detail-value {
+            color: #ffffff;
+            margin-left: 10px;
+        }
+
+        .card-description {
+            margin-top: 15px;
+            color: #cbd5e0;
+            line-height: 1.6;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff7b65, #ff5a8b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 20px rgba(255, 90, 139, 0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 8px 25px rgba(255, 90, 139, 0.6);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #a0aec0;
+        }
+
+        .empty-state p {
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="workout-container">
+        <!-- Navigation -->
+        <div class="nav" role="navigation" aria-label="Main navigation">
+            <div style="display: flex; align-items: center; gap: 40px; flex: 1;">
+                <div class="brand" onclick="window.location.href='/landing/index.html'">VOLX</div>
+                <nav class="nav-links" aria-hidden="true">
+                    <a href="/landing/index.html">Home</a>
+                    <a href="/landing/pages/dashboard.html">Dashboard</a>
+                    <a href="/landing/pages/workout.html">Workouts</a>
+                    <a href="/landing/pages/blog.html">Blog</a>
+                </nav>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px; justify-content: flex-end;">
+                <button class="login-btn" onclick="window.location.href='/login.html'">LOGIN</button>
+                <div class="profile-container" style="display: none;">
+                    <div class="profile-icon" title="Profile">👤</div>
+                    <div class="profile-menu">
+                        <a href="#" onclick="event.preventDefault(); logout();">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header">
+            <h1>Workout Tracker</h1>
+            <p>Your fitness journey, visualized</p>
+        </div>
+
+        <div class="workout-timeline">
+            <!-- Workout Card 1 -->
+            <div class="workout-card">
+                <div class="card-header">
+                    <h3 class="card-title">Chest & Triceps</h3>
+                    <div class="card-actions">
+                        <button class="card-action-btn" title="Edit Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 5H6C4.89543 5 4 5.89543 4 7V18C4 19.1046 4.89543 20 6 20H17C18.1046 20 19 19.1046 19 18V13M16.5858 2.41421C17.3668 1.63316 18.6332 1.63316 19.4142 2.41421C20.1952 3.19526 20.1952 4.4616 19.4142 5.24264L8.8885 15.7683L5 16.7784L5.99995 12.8999L16.5858 2.41421Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="card-action-btn" title="Delete Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 7H20M10 11V17M14 11V17M5 7L6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19L19 7M9 7V4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-detail">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value">Jan 3, 2026</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">60 minutes</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Calories:</span>
+                        <span class="detail-value">420 kcal</span>
+                    </div>
+                    <div class="card-description">
+                        <p>Focus on bench press, incline dumbbell press, push-ups, tricep dips, and overhead extensions. Great session with progressive overload.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workout Card 2 -->
+            <div class="workout-card">
+                <div class="card-header">
+                    <h3 class="card-title">Back & Biceps</h3>
+                    <div class="card-actions">
+                        <button class="card-action-btn" title="Edit Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 5H6C4.89543 5 4 5.89543 4 7V18C4 19.1046 4.89543 20 6 20H17C18.1046 20 19 19.1046 19 18V13M16.5858 2.41421C17.3668 1.63316 18.6332 1.63316 19.4142 2.41421C20.1952 3.19526 20.1952 4.4616 19.4142 5.24264L8.8885 15.7683L5 16.7784L5.99995 12.8999L16.5858 2.41421Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="card-action-btn" title="Delete Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 7H20M10 11V17M14 11V17M5 7L6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19L19 7M9 7V4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-detail">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value">Jan 1, 2026</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">55 minutes</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Calories:</span>
+                        <span class="detail-value">380 kcal</span>
+                    </div>
+                    <div class="card-description">
+                        <p>Pull-ups, rows, lat pulldowns, and bicep curls. Focused on mind-muscle connection and controlled movements.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workout Card 3 -->
+            <div class="workout-card">
+                <div class="card-header">
+                    <h3 class="card-title">Leg Day</h3>
+                    <div class="card-actions">
+                        <button class="card-action-btn" title="Edit Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 5H6C4.89543 5 4 5.89543 4 7V18C4 19.1046 4.89543 20 6 20H17C18.1046 20 19 19.1046 19 18V13M16.5858 2.41421C17.3668 1.63316 18.6332 1.63316 19.4142 2.41421C20.1952 3.19526 20.1952 4.4616 19.4142 5.24264L8.8885 15.7683L5 16.7784L5.99995 12.8999L16.5858 2.41421Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="card-action-btn" title="Delete Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 7H20M10 11V17M14 11V17M5 7L6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19L19 7M9 7V4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-detail">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value">Dec 30, 2025</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">75 minutes</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Calories:</span>
+                        <span class="detail-value">520 kcal</span>
+                    </div>
+                    <div class="card-description">
+                        <p>Squats, deadlifts, lunges, and leg press. Challenging session with heavy weights and good form maintenance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workout Card 4 -->
+            <div class="workout-card">
+                <div class="card-header">
+                    <h3 class="card-title">Shoulders & Abs</h3>
+                    <div class="card-actions">
+                        <button class="card-action-btn" title="Edit Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 5H6C4.89543 5 4 5.89543 4 7V18C4 19.1046 4.89543 20 6 20H17C18.1046 20 19 19.1046 19 18V13M16.5858 2.41421C17.3668 1.63316 18.6332 1.63316 19.4142 2.41421C20.1952 3.19526 20.1952 4.4616 19.4142 5.24264L8.8885 15.7683L5 16.7784L5.99995 12.8999L16.5858 2.41421Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="card-action-btn" title="Delete Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 7H20M10 11V17M14 11V17M5 7L6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19L19 7M9 7V4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-detail">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value">Dec 28, 2025</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">45 minutes</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Calories:</span>
+                        <span class="detail-value">280 kcal</span>
+                    </div>
+                    <div class="card-description">
+                        <p>Overhead press, lateral raises, face pulls, and core circuit. Focused on stability and control throughout.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="fab" title="Add New Workout">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19M5 12H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+
+    <script>
+        // Modal functionality
+        const modal = document.createElement('div');
+        modal.innerHTML = `
+            <div id="addWorkoutModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Add New Workout</h2>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form id="workoutForm">
+                            <div class="form-group">
+                                <label for="workoutName">Workout Name</label>
+                                <input type="text" id="workoutName" name="workoutName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="workoutDate">Date</label>
+                                <input type="date" id="workoutDate" name="workoutDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="workoutDuration">Duration (minutes)</label>
+                                <input type="number" id="workoutDuration" name="workoutDuration" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="workoutCalories">Calories Burned</label>
+                                <input type="number" id="workoutCalories" name="workoutCalories" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="workoutDescription">Description</label>
+                                <textarea id="workoutDescription" name="workoutDescription" rows="3"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" id="cancelBtn">Cancel</button>
+                                <button type="submit" id="saveWorkoutBtn">Save Workout</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Add styles for modal
+        const modalStyles = document.createElement('style');
+        modalStyles.textContent = `
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.7);
+                backdrop-filter: blur(5px);
+            }
+            .modal-content {
+                background: rgba(30, 30, 30, 0.95);
+                margin: 2% auto;
+                padding: 0;
+                border: 1px solid #444;
+                border-radius: 15px;
+                width: 90%;
+                max-width: 350px;
+                box-shadow: 0 10px 30px rgba(255, 90, 139, 0.3);
+                animation: modalAppear 0.3s ease;
+            }
+            @keyframes modalAppear {
+                from { opacity: 0; transform: translateY(-80px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .modal-header {
+                padding: 15px;
+                border-bottom: 1px solid #444;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .modal-header h2 {
+                margin: 0;
+                color: #ffffff;
+                background: linear-gradient(90deg, #ff7b65, #ff5a8b);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .close {
+                font-size: 24px;
+                font-weight: bold;
+                color: #aaa;
+                cursor: pointer;
+                transition: color 0.3s;
+            }
+            .close:hover {
+                color: #ff7b65;
+            }
+            .modal-body {
+                padding: 15px;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                color: #cbd5e0;
+                font-weight: 500;
+                font-size: 14px;
+            }
+            .form-group input,
+            .form-group textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #4a5568;
+                border-radius: 8px;
+                background: rgba(20, 20, 20, 0.8);
+                color: #ffffff;
+                font-size: 14px;
+            }
+            .form-group input:focus,
+            .form-group textarea:focus {
+                outline: none;
+                border-color: #ff7b65;
+            }
+            .form-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            #cancelBtn,
+            #saveWorkoutBtn {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+            #cancelBtn {
+                background: #4a5568;
+                color: #ffffff;
+            }
+            #cancelBtn:hover {
+                background: #718096;
+            }
+            #saveWorkoutBtn {
+                background: linear-gradient(135deg, #ff7b65, #ff5a8b);
+                color: white;
+            }
+            #saveWorkoutBtn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(255, 90, 139, 0.4);
+            }
+        `;
+        document.head.appendChild(modalStyles);
+
+        // Get modal elements
+        const addWorkoutModal = document.getElementById('addWorkoutModal');
+        const workoutForm = document.getElementById('workoutForm');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const closeBtn = document.querySelector('.close');
+
+        // Function to show modal
+        function showModal() {
+            addWorkoutModal.style.display = 'block';
+            
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('workoutDate').value = today;
+        }
+
+        // Function to hide modal
+        function hideModal() {
+            addWorkoutModal.style.display = 'none';
+            workoutForm.reset();
+        }
+
+        // Add functionality to the FAB button
+        document.querySelector('.fab').addEventListener('click', function() {
+            showModal();
+        });
+
+        // Close modal when clicking on close button
+        closeBtn.addEventListener('click', hideModal);
+        cancelBtn.addEventListener('click', hideModal);
+
+        // Close modal when clicking outside of modal content
+        window.addEventListener('click', function(event) {
+            if (event.target === addWorkoutModal) {
+                hideModal();
+            }
+        });
+
+        // Handle form submission
+        workoutForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const workoutName = document.getElementById('workoutName').value;
+            const workoutDate = document.getElementById('workoutDate').value;
+            const workoutDuration = document.getElementById('workoutDuration').value;
+            const workoutCalories = document.getElementById('workoutCalories').value;
+            const workoutDescription = document.getElementById('workoutDescription').value;
+            
+            // Format the date for display
+            const formattedDate = new Date(workoutDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            // Create new workout card
+            const newCard = document.createElement('div');
+            newCard.className = 'workout-card';
+            newCard.innerHTML = `
+                <div class="card-header">
+                    <h3 class="card-title">${workoutName}</h3>
+                    <div class="card-actions">
+                        <button class="card-action-btn" title="Edit Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 5H6C4.89543 5 4 5.89543 4 7V18C4 19.1046 4.89543 20 6 20H17C18.1046 20 19 19.1046 19 18V13M16.5858 2.41421C17.3668 1.63316 18.6332 1.63316 19.4142 2.41421C20.1952 3.19526 20.1952 4.4616 19.4142 5.24264L8.8885 15.7683L5 16.7784L5.99995 12.8999L16.5858 2.41421Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="card-action-btn" title="Delete Workout">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 7H20M10 11V17M14 11V17M5 7L6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19L19 7M9 7V4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-detail">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value">${formattedDate}</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">${workoutDuration} minutes</span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="detail-label">Calories:</span>
+                        <span class="detail-value">${workoutCalories} kcal</span>
+                    </div>
+                    <div class="card-description">
+                        <p>${workoutDescription || 'No description provided'}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Add the new card to the top of the timeline
+            const timeline = document.querySelector('.workout-timeline');
+            const firstCard = timeline.querySelector('.workout-card');
+            if (firstCard) {
+                timeline.insertBefore(newCard, firstCard);
+            } else {
+                timeline.appendChild(newCard);
+            }
+            
+            // Add event listeners to the new card's buttons
+            const newEditBtn = newCard.querySelector('.card-action-btn[title="Edit Workout"]');
+            const newDeleteBtn = newCard.querySelector('.card-action-btn[title="Delete Workout"]');
+            
+            newEditBtn.addEventListener('click', function() {
+                const card = this.closest('.workout-card');
+                const workoutTitle = card.querySelector('.card-title').textContent;
+                alert(`Edit functionality for: ${workoutTitle}`);
+            });
+            
+            newDeleteBtn.addEventListener('click', function() {
+                const card = this.closest('.workout-card');
+                const workoutTitle = card.querySelector('.card-title').textContent;
+                if(confirm(`Are you sure you want to delete the "${workoutTitle}" workout?`)) {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(100px)';
+                    setTimeout(() => {
+                        card.remove();
+                    }, 300);
+                }
+            });
+            
+            // Hide modal and reset form
+            hideModal();
+            
+            // Show success message
+            alert(`Workout "${workoutName}" added successfully!`);
+        });
+
+        // Add functionality to edit buttons
+        const editButtons = document.querySelectorAll('.card-action-btn[title="Edit Workout"]');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const card = this.closest('.workout-card');
+                const workoutTitle = card.querySelector('.card-title').textContent;
+                alert(`Edit functionality for: ${workoutTitle}`);
+            });
+        });
+
+        // Add functionality to delete buttons
+        const deleteButtons = document.querySelectorAll('.card-action-btn[title="Delete Workout"]');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const card = this.closest('.workout-card');
+                const workoutTitle = card.querySelector('.card-title').textContent;
+                if(confirm(`Are you sure you want to delete the "${workoutTitle}" workout?`)) {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(100px)';
+                    setTimeout(() => {
+                        card.remove();
+                    }, 300);
+                }
+            });
+        });
+        
+        // The authentication check and UI update is now handled by the main script.js file
+        // which includes server-side session validation for both regular and Google logins
+    </script>
+</body>
+</html>

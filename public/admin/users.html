@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - VOLX</title>
+    <link rel="stylesheet" href="/style.css">
+    
+    <style>
+        /* Additional styles to ensure text is visible in admin panel */
+        .admin-container, .admin-container h1, .admin-container h2, .admin-container a {
+            color: white !important;
+        }
+        
+        #usersTable th, #usersTable td {
+            color: white !important;
+        }
+        
+        #usersTable th {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        #usersTable td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        /* Home icon styles */
+        .home-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .home-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Home icon link to main page -->
+    <a href="/" class="home-icon" title="Go to Home Page">🏠</a>
+    
+    <div class="admin-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>Admin Dashboard</h1>
+            <button id="logoutBtn" class="next-btn" style="background: #dc3545;">Logout</button>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <a href="/admin/add-user.html" class="next-btn">Add New User</a>
+        </div>
+        
+        <h2>Users List</h2>
+        <table id="usersTable" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Name</th>
+                    <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Email</th>
+                    <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <!-- Users will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check if user is authenticated
+            const credentials = sessionStorage.getItem('adminCredentials');
+            if (!credentials) {
+                window.location.href = '/admin/index.html';
+                return;
+            }
+            
+            // Setup logout button
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                sessionStorage.removeItem('adminCredentials');
+                window.location.href = '/admin/index.html';
+            });
+            
+            // Load users
+            await loadUsers(credentials);
+        });
+        
+        async function loadUsers(credentials) {
+            try {
+                const response = await fetch('/api/users', {
+                    headers: {
+                        'Authorization': `Basic ${credentials}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    sessionStorage.removeItem('adminCredentials');
+                    window.location.href = '/admin/index.html';
+                    return;
+                }
+                
+                const users = await response.json();
+                const userTableBody = document.getElementById('userTableBody');
+                userTableBody.innerHTML = '';
+                
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${user.name}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${user.email}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">
+                            <a href="/admin/edit-user.html?id=${user._id}" style="margin-right: 10px;">Edit</a>
+                            <button onclick="deleteUser('${user._id}')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Delete</button>
+                        </td>
+                    `;
+                    userTableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+        
+        async function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                const credentials = sessionStorage.getItem('adminCredentials');
+                if (!credentials) {
+                    window.location.href = '/admin/index.html';
+                    return;
+                }
+                
+                try {
+                    await fetch(`/api/users/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Basic ${credentials}`
+                        }
+                    });
+                    
+                    // Reload users
+                    const credentialsRefresh = sessionStorage.getItem('adminCredentials');
+                    await loadUsers(credentialsRefresh);
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                    alert('Error deleting user');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>VOLX - Landing Page</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Merriweather:ital,wght@0,700;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/landing/style.css" />
+    <script src="/script.js" defer></script>
+    <script src="/landing/script.js" defer></script>
+    
+    <style>
+      /* Ensure profile icon appears on top */
+      .nav {
+        position: relative;
+        z-index: 1000;
+      }
+      
+      .profile-container {
+        position: relative;
+        z-index: 1001;
+        display: none;
+        flex-direction: column;
+      }
+      
+      /* Profile menu */
+      .profile-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--bg-cream);
+        border-radius: 10px;
+        padding: 10px 0;
+        min-width: 150px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1002;
+      }
+      
+      .profile-menu a {
+        display: block;
+        padding: 10px 20px;
+        color: var(--text-black);
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+      
+      .profile-menu a:hover {
+        background: var(--cta);
+        color: white;
+        transform: translateX(5px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="left">
+        <div class="nav" role="navigation" aria-label="Main navigation">
+          <div class="brand" onclick="window.location.href='/landing/index.html'">VOLX</div>
+
+          <div style="display: flex; align-items: center; gap: 20px">
+            <nav class="nav-links" aria-hidden="true">
+              <a href="/landing/index.html">Home</a>
+              <a href="/landing/pages/dashboard.html">Dashboard</a>
+              <a href="/landing/pages/workout.html">Workouts</a>
+              <a href="/landing/pages/blog.html">Blog</a>
+            </nav>
+            <button class="login-btn" onclick="window.location.href='/login.html'">LOGIN</button>
+            <div class="profile-container" style="display: none; position: relative;">
+              <div class="profile-icon" title="Profile">👤</div>
+              <div class="profile-menu">
+                <a href="#" onclick="console.log('Logout link clicked'); event.preventDefault(); logout();">Logout</a>
+              </div>
+            </div>
+            
+
+          </div>
+        </div>
+
+        <div class="hero">
+          <h1>WORK HARD IN SILENCE<br />LET SUCCESS BE<br />YOUR NOISE !</h1>
+
+          <p class="lead">
+            You don't have to be perfect. You just have to be committed. Every
+            rep brings you closer.
+          </p>
+
+          <div class="cta-row">
+            <button class="btn-primary">Our Services →</button>
+            <a href="#" class="link-secondary"
+              >Start Scheduling
+              <span class="arrow-dash" aria-hidden="true"></span
+            ></a>
+          </div>
+
+          <div class="partners" aria-hidden="true">
+            <img src="/Images/adidas.png" alt="Adidas Logo" />
+            <img src="/Images/Nike.png" alt="Nike Logo" />
+            <img src="/Images/Gatorade.png" alt="Gatorade Logo" />
+            <img src="/Images/PUMA.png" alt="Puma Logo" />
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="card">
+          <div class="bg-shape"></div>
+          <div class="circle-bg"></div>
+
+          <div class="image-area">
+            <img src="/Images/landing img.png" alt="Bodybuilder Image" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <section class="section_2">
+  <div class="sec_main">
+    <h2>MONTHLY FEATURE PROGRAMS</h2>
+    <p class="section-subtitle">Take part in our feature program and have fun</p>
+
+    <div class="program-cards">
+
+      <div class="program-card">
+        <div class="icon-circle">
+          <img src="/Images/run icon.png" alt="Running Icon" />
+        </div>
+        <p>Here's how to shrink your belly and thighs with aerobics in 7 days!</p>
+        <a href="#" class="learn-link">Learn more →</a>
+      </div>
+
+      <div class="program-card">
+        <div class="icon-circle">
+          <img src="/Images/weight icon.png" alt="Weight Icon" />
+        </div>
+        <p>Without using any tools, you can burn belly fat lying down.</p>
+        <a href="#" class="learn-link">Learn more →</a>
+      </div>
+
+      <div class="program-card">
+        <div class="icon-circle">
+          <img src="/Images/yoga icon.png" alt="Yoga Icon" />
+        </div>
+        <p>Here you will be fit in such a way that your body is free from harmful aspects.</p>
+        <a href="#" class="learn-link">Learn more →</a>
+      </div>
+
+    </div> 
+
+  </div> 
+</section>
+
+    <section class="learn-section">
+  <div class="learn-content">
+
+    <h2>WHAT YOU WILL<br>LEARN HERE ?</h2>
+
+    <p class="learn-desc">
+      The conception we are working on is simple and we are dedicating our production to it.
+    </p>
+
+    <div class="learn-buttons">
+      <button class="btn-start">Get started</button>
+
+      <a href="#" class="btn-video">
+        <span class="play-icon">▶</span> Watch video
+      </a>
+    </div>
+
+  </div>
+
+  <div class="learn-images">
+    <div class="img-shape">
+      <img src="/Images/boxing.png" class="img img-top-left" alt="">
+      <img src="/Images/Dashboard.png" class="img img-top-right" alt="">
+      <img src="/Images/weight ift.png" class="img img-bottom-left" alt="">
+      <img src="/Images/jumping.png" class="img img-bottom-right" alt="">
+    </div>
+  </div>
+</section>
+
+<section class="assist-section">
+  <h2>WE HAVE PROFESSIONAL TRAINERS <br> AVAILABLE TO ASSIST YOU</h2>
+
+  <div class="trainer-grid">
+
+    <div class="trainer-card">
+      <div class="trainer-img">
+        <img src="/Images/luka pol.png" alt="Trainer Image">
+      </div>
+      <h3>Luka Pol</h3>
+      <p>Run daily planing</p>
+    </div>
+
+    <div class="trainer-card">
+      <div class="trainer-img">
+        <img src="/Images/sara lee.png" alt="Trainer Image">
+      </div>
+      <h3>Sarah Lee</h3>
+      <p>Yoga & Flexibility</p>
+    </div>
+
+    <div class="trainer-card">
+      <div class="trainer-img">
+        <img src="/Images/mark irons.png" alt="Trainer Image">
+      </div>
+      <h3>Mark Irons</h3>
+      <p>Strength & Conditioning</p>
+    </div>
+
+  </div>
+</section>
+
+<section class="connect-section">
+  <div class="connect-left">
+    <h2>STAY CONNECTED WITH US TO<br>GET OUR OFFER</h2>
+    <button class="join-btn">Join us</button>
+  </div>
+
+  <div class="connect-right">
+    <div class="word">Exercise</div>
+    <div class="word">Your</div>
+    <div class="word">Mind</div>
+    <div class="word">And</div>
+    <div class="word">Body</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-col">
+      <h3 class="footer-logo">VOLX</h3>
+      <p>Dubai</p>
+      <p>Downtown</p>
+      <p>Burj Khalifa</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>About us</h4>
+      <ul>
+        <li>Our survey</li>
+        <li>Deger</li>
+        <li>Collertative</li>
+        <li>Sustainability</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li>Our survey</li>
+        <li>Deger</li>
+        <li>Collertative</li>
+        <li>Sustainability</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p>📞 +97112345678</p>
+      <p>✉️ volx.hello@ae</p>
+    </div>
+
+  </div>
+
+  <hr>
+</footer>
+<div class="copyright">
+  © 2025 VOLX. All Rights Reserved.
+</div>
+  </body>
+</html>

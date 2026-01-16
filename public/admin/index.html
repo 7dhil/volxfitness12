@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - VOLX</title>
+
+  
+  <link rel="stylesheet" href="/style.css">
+
+  
+  <script src="/admin/script.js" defer></script>
+
+  <style>
+    /* Additional styles to ensure text is visible in admin panel */
+    .signup-box h2, .signup-box p, .signup-box input {
+      color: white !important;
+    }
+    
+    #errorMessage {
+      color: #ff6b6b !important; /* Light red for error messages */
+    }
+    
+    /* Home icon styles */
+    .home-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    
+    .home-icon:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- Home icon link to main page -->
+  <a href="/" class="home-icon" title="Go to Home Page">🏠</a>
+  
+  <div class="signup-container">
+    <div class="signup-box">
+
+      <h1 class="brand">VOLX</h1>
+
+      <h2>Admin Panel</h2>
+      <p class="subtitle">Enter admin credentials to access the dashboard.</p>
+
+      <input type="text" placeholder="Username" id="usernameField" class="input-field" required>
+
+      <div class="password-wrapper">
+        <input type="password" placeholder="Password" id="passwordField" class="input-field" required>
+        <span id="togglePass" class="show-pass">Show</span>
+      </div>
+
+      <button class="next-btn login-btn">Login</button>
+      
+      <div id="errorMessage" style="color: red; margin-top: 10px; display: none;"></div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const passwordField = document.getElementById("passwordField");
+      const usernameField = document.getElementById("usernameField");
+      const togglePass = document.getElementById("togglePass");
+      const loginBtn = document.querySelector('.login-btn');
+      const errorMessage = document.getElementById("errorMessage");
+
+      togglePass.addEventListener("click", () => {
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          togglePass.textContent = "Hide";
+        } else {
+          passwordField.type = "password";
+          togglePass.textContent = "Show";
+        }
+      });
+
+      loginBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        const username = usernameField.value;
+        const password = passwordField.value;
+        
+        if (!username || !password) {
+          errorMessage.textContent = "Please enter both username and password";
+          errorMessage.style.display = "block";
+          return;
+        }
+        
+        // Encode credentials for basic auth
+        const credentials = btoa(`${username}:${password}`);
+        
+        try {
+          // Test authentication by trying to access the users endpoint
+          const response = await fetch('/api/users', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Basic ${credentials}`
+            }
+          });
+          
+          if (response.ok) {
+            // Store credentials in sessionStorage for future requests
+            sessionStorage.setItem('adminCredentials', credentials);
+            // Redirect to admin dashboard
+            window.location.href = '/admin/users.html';
+          } else {
+            errorMessage.textContent = "Invalid username or password";
+            errorMessage.style.display = "block";
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          errorMessage.textContent = "An error occurred during login";
+          errorMessage.style.display = "block";
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - VOLX</title>
+
+  
+  <link rel="stylesheet" href="/style.css">
+
+  
+  <script src="/script.js" defer></script>
+</head>
+
+<body>
+
+<div class="signup-container">
+  <div class="signup-box">
+
+    <h1 class="brand">VOLX</h1>
+
+    <h2>Create Account</h2>
+    <p class="subtitle">Sign up and start your fitness journey.</p>
+
+    <input type="email" placeholder="Email address" class="input-field" required>
+
+    <div class="password-wrapper">
+      <input type="password" placeholder="Password" id="passwordField" class="input-field" required>
+      <span id="togglePass" class="show-pass">Show</span>
+    </div>
+
+    <button class="next-btn login-btn">Sign Up</button>
+
+    <div class="divider">
+      <span class="divider-text">or continue with</span>
+    </div>
+
+    <button class="google-login-btn" onclick="location.href='/auth/google'">
+      <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" class="google-icon">
+      <span>Sign up with Google</span>
+    </button>
+
+    <p class="login-text">Already have an account?
+      <a href="/login.html">Login</a>
+    </p>
+
+  </div>
+</div>
+
+</body>
+</html>
