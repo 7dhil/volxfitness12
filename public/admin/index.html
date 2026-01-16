@@ -108,7 +108,7 @@
         
         try {
           // Test authentication by trying to access the users endpoint
-          const response = await fetch('/api/users', {
+          const response = await fetch('/users', {
             method: 'GET',
             headers: {
               'Authorization': `Basic ${credentials}`

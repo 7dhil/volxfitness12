@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('passwordField').value;
         
         try {
-          const response = await fetch('/api/login', {
+          const response = await fetch('/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('passwordField').value;
         
         try {
-          const response = await fetch('/api/users', {
+          const response = await fetch('/users', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -121,7 +121,7 @@ async function checkLoginStatus() {
   
   // Check if user is logged in by making a request to the server
   try {
-    const response = await fetch('/api/users/profile', {
+    const response = await fetch('/users/profile', {
       method: 'GET',
       credentials: 'include' // Include cookies/sessions in the request
     });
@@ -163,7 +163,7 @@ async function logout() {
     updateAuthUIAfterLogout();
     
     // Make the logout request to the server
-    const response = await fetch('/api/logout', {
+    const response = await fetch('/logout', {
       method: 'GET',
       credentials: 'include'
     });

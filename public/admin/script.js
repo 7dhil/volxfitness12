@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Verify credentials are still valid
         try {
-            const response = await fetch('/api/users', {
+            const response = await fetch('/users', {
                 headers: {
                     'Authorization': `Basic ${credentials}`
                 }
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const credentials = sessionStorage.getItem('adminCredentials');
 
-            await fetch('/api/users', {
+            await fetch('/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const credentials = sessionStorage.getItem('adminCredentials');
         
         // Load user data
-        const user = await fetch(`/api/users/${userId}`, {
+        const user = await fetch(`/users/${userId}`, {
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const credentials = sessionStorage.getItem('adminCredentials');
 
-            await fetch(`/api/users/${id}`, {
+            await fetch(`/users/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadUsers(credentials) {
     try {
-        const users = await fetch('/api/users', {
+        const users = await fetch('/users', {
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
@@ -136,7 +136,7 @@ async function loadUsers(credentials) {
 async function deleteUser(id, credentials) {
     if (confirm('Are you sure you want to delete this user?')) {
         try {
-            await fetch(`/api/users/${id}`, {
+            await fetch(`/users/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Basic ${credentials}`

@@ -98,7 +98,7 @@
         
         async function loadUsers(credentials) {
             try {
-                const response = await fetch('/api/users', {
+                const response = await fetch('/users', {
                     headers: {
                         'Authorization': `Basic ${credentials}`
                     }
@@ -140,7 +140,7 @@
                 }
                 
                 try {
-                    await fetch(`/api/users/${id}`, {
+                    await fetch(`/users/${id}`, {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Basic ${credentials}`

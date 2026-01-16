@@ -1,27 +1,7 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../models/user');
-
-// Get user profile route
-router.get('/profile', async (req, res) => {
-    try {
-        // Check both session user (regular login) and passport user (Google login)
-        // Passport sets the user on req.user after deserialization
-        const user = req.session.user || req.user;
-        
-        if (user) {
-            res.json({
-                id: user._id || user.id,
-                name: user.name || user.displayName,
-                email: user.email
-            });
-        } else {
-            res.status(401).json({ error: 'Not authenticated' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
 
 // Create a new user
 router.post('/', async (req, res) => {

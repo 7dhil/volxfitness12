@@ -67,6 +67,35 @@ All API endpoints are prefixed with `/api` when deployed on Vercel:
 
 ## Troubleshooting
 
+### Images Not Showing After Deployment
+If images are not visible after deployment to Vercel:
+1. Ensure all image files are in the `public` directory
+2. Image paths in HTML files should start with `/` to reference from the public directory root
+3. For example: `<img src="/Images/image.png">` where Images folder is in the public directory
+
+### Login Error: "An error occurred during login"
+This error typically occurs due to:
+1. Missing or incorrect environment variables in Vercel
+2. Database connection issues (especially if using local MongoDB instead of MongoDB Atlas)
+3. Network timeout issues in serverless environment
+4. Incorrect API endpoint calls from frontend
+
+To fix:
+- Verify all environment variables are set in Vercel dashboard
+- Ensure you're using a cloud MongoDB service like MongoDB Atlas, not local MongoDB
+- Check that all frontend API calls use the `/api` prefix
+
+### MongoDB Timeout Error: "Operation `users.findOne()` buffering timed out after 10000ms"
+This error occurs when:
+1. Using a local MongoDB connection string instead of a cloud-based one
+2. The MongoDB server is not accessible from Vercel's servers
+3. Network connectivity issues between Vercel and your database
+
+To fix:
+- Use a cloud-hosted MongoDB service like MongoDB Atlas
+- Ensure your MongoDB connection string is correctly set in Vercel environment variables
+- Check that your MongoDB instance allows connections from external sources
+
 ### Serverless Function Crashes
 If you encounter serverless function crashes:
 1. Ensure all required environment variables are set in Vercel
@@ -76,6 +105,7 @@ If you encounter serverless function crashes:
 ### Database Connection Issues
 - Make sure your MongoDB URI is accessible from Vercel's servers
 - If using MongoDB Atlas, ensure IP whitelisting allows connections from Vercel
+- Use a publicly accessible MongoDB service (like MongoDB Atlas) instead of local MongoDB
 
 ### Authentication Issues
 - Verify your Google OAuth redirect URIs include your Vercel deployment URL
